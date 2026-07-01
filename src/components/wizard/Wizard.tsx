@@ -6,6 +6,8 @@ import {
   initialWizardState,
 } from '@/lib/wizard-reducer';
 import type {
+  AromeVape,
+  BaseHuile,
   ConcentrationHuile,
   Format,
   StarterId,
@@ -14,6 +16,7 @@ import { Stepper } from './Stepper';
 import { Step1Besoin } from './Step1Besoin';
 import { Step2Intensite } from './Step2Intensite';
 import { Step3Format } from './Step3Format';
+import { Step4Personnalisation } from './Step4Personnalisation';
 
 export function Wizard() {
   const [state, dispatch] = useReducer(wizardReducer, initialWizardState);
@@ -129,12 +132,48 @@ export function Wizard() {
           />
         )}
 
+        {(state.step === 'flacon1-personnalisation' ||
+          state.step === 'flacon2-personnalisation') && (
+          <Step4Personnalisation
+            flaconIndex={flaconIndex}
+            format={(currentFlacon as { format: Format }).format}
+            currentBase={
+              (currentFlacon as { baseHuile?: BaseHuile }).baseHuile
+            }
+            currentArome={
+              (currentFlacon as { aromeVape?: AromeVape }).aromeVape
+            }
+            onSelectBase={(b) =>
+              dispatch({ type: 'SET_BASE_HUILE', flaconIndex, baseHuile: b })
+            }
+            onSelectArome={(a) =>
+              dispatch({ type: 'SET_AROME_VAPE', flaconIndex, aromeVape: a })
+            }
+            onBack={() =>
+              dispatch({
+                type: 'GO_TO_STEP',
+                step:
+                  flaconIndex === 1 ? 'flacon1-format' : 'flacon2-format',
+              })
+            }
+            onNext={() => {
+              if (flaconIndex === 1) {
+                dispatch({ type: 'GO_TO_BRIDGE' });
+              } else {
+                dispatch({ type: 'GO_TO_STEP', step: 'recap' });
+              }
+            }}
+          />
+        )}
+
         {state.step !== 'flacon1-besoin' &&
           state.step !== 'flacon2-besoin' &&
           state.step !== 'flacon1-intensite' &&
           state.step !== 'flacon2-intensite' &&
           state.step !== 'flacon1-format' &&
-          state.step !== 'flacon2-format' && (
+          state.step !== 'flacon2-format' &&
+          state.step !== 'flacon1-personnalisation' &&
+          state.step !== 'flacon2-personnalisation' && (
             <p className="text-smoke-600">
               Étape <em>{state.step}</em> — implémentée aux tasks suivantes.
             </p>
