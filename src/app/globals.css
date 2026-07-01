@@ -15,8 +15,8 @@
   --color-alert-500: #b83530;
 
   /* Typos */
-  --font-fraunces: var(--font-fraunces);
-  --font-inter: var(--font-inter);
+  --font-serif: var(--font-fraunces), Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-sans: var(--font-inter), system-ui, -apple-system, "Segoe UI", sans-serif;
 
   /* Radii */
   --radius-md: 6px;
