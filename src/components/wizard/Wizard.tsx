@@ -9,6 +9,7 @@ import type {
   AromeVape,
   BaseHuile,
   ConcentrationHuile,
+  Flacon,
   Format,
   StarterId,
 } from '@/types/config';
@@ -17,6 +18,7 @@ import { Step1Besoin } from './Step1Besoin';
 import { Step2Intensite } from './Step2Intensite';
 import { Step3Format } from './Step3Format';
 import { Step4Personnalisation } from './Step4Personnalisation';
+import { BridgeAjoutFlacon } from './BridgeAjoutFlacon';
 
 export function Wizard() {
   const [state, dispatch] = useReducer(wizardReducer, initialWizardState);
@@ -166,6 +168,15 @@ export function Wizard() {
           />
         )}
 
+        {state.step === 'bridge' && (
+          <BridgeAjoutFlacon
+            flacon1={state.flacon1 as Flacon}
+            onAutoSame={() => dispatch({ type: 'ADD_FLACON2_AUTO_SAME' })}
+            onCustom={() => dispatch({ type: 'ADD_FLACON2_CUSTOM' })}
+            onSkip={() => dispatch({ type: 'SKIP_FLACON2' })}
+          />
+        )}
+
         {state.step !== 'flacon1-besoin' &&
           state.step !== 'flacon2-besoin' &&
           state.step !== 'flacon1-intensite' &&
@@ -173,7 +184,8 @@ export function Wizard() {
           state.step !== 'flacon1-format' &&
           state.step !== 'flacon2-format' &&
           state.step !== 'flacon1-personnalisation' &&
-          state.step !== 'flacon2-personnalisation' && (
+          state.step !== 'flacon2-personnalisation' &&
+          state.step !== 'bridge' && (
             <p className="text-smoke-600">
               Étape <em>{state.step}</em> — implémentée aux tasks suivantes.
             </p>
