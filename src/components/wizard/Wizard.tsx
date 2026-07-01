@@ -5,9 +5,10 @@ import {
   wizardReducer,
   initialWizardState,
 } from '@/lib/wizard-reducer';
-import type { StarterId } from '@/types/config';
+import type { ConcentrationHuile, StarterId } from '@/types/config';
 import { Stepper } from './Stepper';
 import { Step1Besoin } from './Step1Besoin';
+import { Step2Intensite } from './Step2Intensite';
 
 export function Wizard() {
   const [state, dispatch] = useReducer(wizardReducer, initialWizardState);
@@ -43,8 +44,45 @@ export function Wizard() {
           />
         )}
 
+        {(state.step === 'flacon1-intensite' ||
+          state.step === 'flacon2-intensite') && (
+          <Step2Intensite
+            flaconIndex={flaconIndex}
+            starterId={
+              (currentFlacon as { starterId: StarterId }).starterId
+            }
+            currentConcentration={
+              (currentFlacon as { concentration?: ConcentrationHuile })
+                .concentration
+            }
+            onSelect={(c) =>
+              dispatch({
+                type: 'SET_CONCENTRATION',
+                flaconIndex,
+                concentration: c,
+              })
+            }
+            onBack={() =>
+              dispatch({
+                type: 'GO_TO_STEP',
+                step:
+                  flaconIndex === 1 ? 'flacon1-besoin' : 'flacon2-besoin',
+              })
+            }
+            onNext={() =>
+              dispatch({
+                type: 'GO_TO_STEP',
+                step:
+                  flaconIndex === 1 ? 'flacon1-format' : 'flacon2-format',
+              })
+            }
+          />
+        )}
+
         {state.step !== 'flacon1-besoin' &&
-          state.step !== 'flacon2-besoin' && (
+          state.step !== 'flacon2-besoin' &&
+          state.step !== 'flacon1-intensite' &&
+          state.step !== 'flacon2-intensite' && (
             <p className="text-smoke-600">
               Étape <em>{state.step}</em> — implémentée aux tasks suivantes.
             </p>
