@@ -5,10 +5,15 @@ import {
   wizardReducer,
   initialWizardState,
 } from '@/lib/wizard-reducer';
-import type { ConcentrationHuile, StarterId } from '@/types/config';
+import type {
+  ConcentrationHuile,
+  Format,
+  StarterId,
+} from '@/types/config';
 import { Stepper } from './Stepper';
 import { Step1Besoin } from './Step1Besoin';
 import { Step2Intensite } from './Step2Intensite';
+import { Step3Format } from './Step3Format';
 
 export function Wizard() {
   const [state, dispatch] = useReducer(wizardReducer, initialWizardState);
@@ -79,10 +84,57 @@ export function Wizard() {
           />
         )}
 
+        {(state.step === 'flacon1-format' ||
+          state.step === 'flacon2-format') && (
+          <Step3Format
+            flaconIndex={flaconIndex}
+            starterId={
+              (currentFlacon as { starterId: StarterId }).starterId
+            }
+            currentConcentration={
+              (currentFlacon as { concentration: ConcentrationHuile })
+                .concentration
+            }
+            currentFormat={
+              (currentFlacon as { format?: Format }).format
+            }
+            onSelectFormat={(format, concentrationOverride) => {
+              dispatch({ type: 'SET_FORMAT', flaconIndex, format });
+              if (concentrationOverride !== undefined) {
+                dispatch({
+                  type: 'SET_CONCENTRATION',
+                  flaconIndex,
+                  concentration: concentrationOverride,
+                });
+              }
+            }}
+            onBack={() =>
+              dispatch({
+                type: 'GO_TO_STEP',
+                step:
+                  flaconIndex === 1
+                    ? 'flacon1-intensite'
+                    : 'flacon2-intensite',
+              })
+            }
+            onNext={() =>
+              dispatch({
+                type: 'GO_TO_STEP',
+                step:
+                  flaconIndex === 1
+                    ? 'flacon1-personnalisation'
+                    : 'flacon2-personnalisation',
+              })
+            }
+          />
+        )}
+
         {state.step !== 'flacon1-besoin' &&
           state.step !== 'flacon2-besoin' &&
           state.step !== 'flacon1-intensite' &&
-          state.step !== 'flacon2-intensite' && (
+          state.step !== 'flacon2-intensite' &&
+          state.step !== 'flacon1-format' &&
+          state.step !== 'flacon2-format' && (
             <p className="text-smoke-600">
               Étape <em>{state.step}</em> — implémentée aux tasks suivantes.
             </p>
