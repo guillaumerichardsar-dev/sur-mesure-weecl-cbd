@@ -19,6 +19,7 @@ import { Step2Intensite } from './Step2Intensite';
 import { Step3Format } from './Step3Format';
 import { Step4Personnalisation } from './Step4Personnalisation';
 import { BridgeAjoutFlacon } from './BridgeAjoutFlacon';
+import { Recap } from './Recap';
 
 export function Wizard() {
   const [state, dispatch] = useReducer(wizardReducer, initialWizardState);
@@ -177,19 +178,20 @@ export function Wizard() {
           />
         )}
 
-        {state.step !== 'flacon1-besoin' &&
-          state.step !== 'flacon2-besoin' &&
-          state.step !== 'flacon1-intensite' &&
-          state.step !== 'flacon2-intensite' &&
-          state.step !== 'flacon1-format' &&
-          state.step !== 'flacon2-format' &&
-          state.step !== 'flacon1-personnalisation' &&
-          state.step !== 'flacon2-personnalisation' &&
-          state.step !== 'bridge' && (
-            <p className="text-smoke-600">
-              Étape <em>{state.step}</em> — implémentée aux tasks suivantes.
-            </p>
-          )}
+        {state.step === 'recap' && (
+          <Recap
+            flacons={
+              [state.flacon1, state.flacon2].filter(
+                (f): f is Flacon => !!f && !!f.format
+              ) as Flacon[]
+            }
+            contact={state.contact}
+            onUpdateContact={(c) =>
+              dispatch({ type: 'SET_CONTACT', contact: c })
+            }
+            onBack={() => dispatch({ type: 'GO_TO_BRIDGE' })}
+          />
+        )}
       </section>
     </div>
   );
