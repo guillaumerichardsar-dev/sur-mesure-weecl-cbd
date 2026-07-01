@@ -4,29 +4,51 @@ import { useReducer } from 'react';
 import {
   wizardReducer,
   initialWizardState,
-  type WizardAction,
 } from '@/lib/wizard-reducer';
+import type { StarterId } from '@/types/config';
 import { Stepper } from './Stepper';
+import { Step1Besoin } from './Step1Besoin';
 
 export function Wizard() {
   const [state, dispatch] = useReducer(wizardReducer, initialWizardState);
+
+  const flaconIndex: 1 | 2 =
+    state.step.startsWith('flacon2') ? 2 : 1;
+  const currentFlacon =
+    flaconIndex === 1 ? state.flacon1 : state.flacon2 ?? {};
 
   return (
     <div>
       <Stepper step={state.step} />
       <section className="bg-white border border-bone-200 rounded-lg p-8 shadow-card">
-        <h2 className="font-serif text-3xl mb-4">
-          Wizard step : <em>{state.step}</em>
-        </h2>
-        <p className="text-smoke-600">
-          Le contenu des étapes sera implémenté dans les tasks suivantes.
-        </p>
-        <button
-          className="mt-6 bg-forest-500 text-white px-4 py-2 rounded"
-          onClick={() => dispatch({ type: 'RESET' } satisfies WizardAction)}
-        >
-          Reset
-        </button>
+        {(state.step === 'flacon1-besoin' ||
+          state.step === 'flacon2-besoin') && (
+          <Step1Besoin
+            flaconIndex={flaconIndex}
+            currentStarterId={
+              (currentFlacon as { starterId?: StarterId }).starterId
+            }
+            onSelect={(id) =>
+              dispatch({ type: 'SET_STARTER', flaconIndex, starterId: id })
+            }
+            onNext={() =>
+              dispatch({
+                type: 'GO_TO_STEP',
+                step:
+                  flaconIndex === 1
+                    ? 'flacon1-intensite'
+                    : 'flacon2-intensite',
+              })
+            }
+          />
+        )}
+
+        {state.step !== 'flacon1-besoin' &&
+          state.step !== 'flacon2-besoin' && (
+            <p className="text-smoke-600">
+              Étape <em>{state.step}</em> — implémentée aux tasks suivantes.
+            </p>
+          )}
       </section>
     </div>
   );
