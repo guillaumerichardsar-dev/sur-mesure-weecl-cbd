@@ -1,5 +1,14 @@
 # Sur-Mesure WEECL — Prototype cliquable V0
 
+## URL démo
+
+Prototype live : **[https://sur-mesure-weecl-cbd.vercel.app](https://sur-mesure-weecl-cbd.vercel.app)**
+
+Le prototype est en accès libre. Aucune donnée n'est stockée, aucun paiement
+n'est prélevé. Les prix affichés sont indicatifs et non contractuels.
+
+Pour donner du feedback, contacter Guillaume par email ou Slack.
+
 Prototype configurateur multi-flacon (huile + vape) pour valider UX avant MVP.
 
 **Stack** : Next.js 15 · TypeScript strict · Tailwind v4 · shadcn/ui · pnpm
