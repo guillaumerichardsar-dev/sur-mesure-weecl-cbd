@@ -20,6 +20,7 @@ import { Step3Format } from './Step3Format';
 import { Step4Personnalisation } from './Step4Personnalisation';
 import { BridgeAjoutFlacon } from './BridgeAjoutFlacon';
 import { Recap } from './Recap';
+import { DevisSidebar } from './DevisSidebar';
 
 export function Wizard() {
   const [state, dispatch] = useReducer(wizardReducer, initialWizardState);
@@ -32,7 +33,8 @@ export function Wizard() {
   return (
     <div>
       <Stepper step={state.step} />
-      <section className="bg-white border border-bone-200 rounded-lg p-8 shadow-card">
+      <div className="grid lg:grid-cols-3 gap-8">
+        <section className="lg:col-span-2 bg-white border border-bone-200 rounded-lg p-8 shadow-card">
         {(state.step === 'flacon1-besoin' ||
           state.step === 'flacon2-besoin') && (
           <Step1Besoin
@@ -193,6 +195,12 @@ export function Wizard() {
           />
         )}
       </section>
+      <DevisSidebar
+        flacons={
+          state.flacon2 ? [state.flacon1, state.flacon2] : [state.flacon1]
+        }
+      />
+      </div>
     </div>
   );
 }
