@@ -9,6 +9,7 @@ import type {
   Contact,
 } from '@/types/config';
 import { MAPPING_HUILE_VERS_VAPE } from '@/data/pricing-table';
+import { STARTERS } from '@/data/starters';
 
 export const initialWizardState: WizardState = {
   step: 'flacon1-besoin',
@@ -107,6 +108,12 @@ export function wizardReducer(
       if (!f1.format || !f1.starterId || f1.concentration === undefined) {
         return state;
       }
+      const starter = STARTERS.find((s) => s.id === f1.starterId);
+      if (!starter) return state;
+      const needsVape = f1.format === 'huile';
+      const needsHuile = f1.format === 'vape';
+      if (needsVape && !starter.disponibleVape) return state;
+      if (needsHuile && !starter.disponibleHuile) return state;
       if (f1.format === 'huile') {
         const c = inverseConcentrationHuileVersVape(
           f1.concentration as ConcentrationHuile

@@ -75,3 +75,44 @@ test('vape grisé pour starter Confort musculaire', async ({ page }) => {
   await expect(vapeBtn).toBeDisabled();
   await expect(page.getByText(/Non disponible/)).toBeVisible();
 });
+
+test('Step 4 heading renders proper apostrophes (no HTML entities)', async ({
+  page,
+}) => {
+  await page.goto('/configurateur');
+  await page.getByRole('button', { name: /Brut/ }).click();
+  await page.getByRole('button', { name: /Étape suivante/ }).click();
+  await page.getByRole('button', { name: /10%/ }).click();
+  await page.getByRole('button', { name: /Étape suivante/ }).click();
+  await page.getByRole('button', { name: /Huile sublinguale/ }).click();
+  await page.getByRole('button', { name: /Étape suivante/ }).click();
+
+  // Étape 4 : the heading should read "Votre base d'huile", not "Votre base d&apos;huile"
+  await expect(
+    page.getByRole('heading', { name: /Votre base d'huile/ })
+  ).toBeVisible();
+  await expect(page.getByText('d&apos;huile')).toHaveCount(0);
+});
+
+test('Confort musculaire + auto-same bridge does not crash', async ({
+  page,
+}) => {
+  await page.goto('/configurateur');
+  await page.getByRole('button', { name: /Confort musculaire/ }).click();
+  await page.getByRole('button', { name: /Étape suivante/ }).click();
+  await page.getByRole('button', { name: /10%/ }).click();
+  await page.getByRole('button', { name: /Étape suivante/ }).click();
+  await page.getByRole('button', { name: /Huile sublinguale/ }).click();
+  await page.getByRole('button', { name: /Étape suivante/ }).click();
+  await page.getByRole('button', { name: /MCT neutre/ }).click();
+  await page.getByRole('button', { name: /Valider ce flacon/ }).click();
+
+  // Bridge: the auto-same button should NOT be a clickable option — should render as disabled/replaced block
+  await expect(
+    page.getByText(/non disponible pour ce starter|Format vape non disponible/)
+  ).toBeVisible();
+
+  // Continue via skip and verify recap loads without crash
+  await page.getByRole('button', { name: /Non — passer/ }).click();
+  await expect(page.getByRole('heading', { name: /Récapitulatif/ })).toBeVisible();
+});

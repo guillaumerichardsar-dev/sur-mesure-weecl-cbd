@@ -38,12 +38,12 @@ export function Step4Personnalisation({
         Flacon {flaconIndex} · Étape 4
       </p>
       <h2 className="font-serif text-3xl mb-2">
-        {format === 'huile' ? 'Votre base d&apos;huile' : 'Votre arôme vape'}
+        {format === 'huile' ? "Votre base d'huile" : 'Votre arôme vape'}
       </h2>
       <p className="text-smoke-600 mb-8">
         {format === 'huile'
-          ? 'La base modifie la saveur en bouche et la texture, pas l&apos;effet.'
-          : 'L&apos;arôme complète le profil terpénique du starter. La base vape est PG 100% (faible puissance).'}
+          ? "La base modifie la saveur en bouche et la texture, pas l'effet."
+          : "L'arôme complète le profil terpénique du starter. La base vape est PG 100% (faible puissance)."}
       </p>
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">

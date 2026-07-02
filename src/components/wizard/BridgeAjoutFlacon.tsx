@@ -21,6 +21,10 @@ export function BridgeAjoutFlacon({
   const formatOppose = flacon1.format === 'huile' ? 'vape' : 'huile';
   const formatOpposeLabel =
     formatOppose === 'huile' ? 'huile 30ml' : 'vape 30ml';
+  const oppositeAvailable =
+    flacon1.format === 'huile'
+      ? (starter?.disponibleVape ?? false)
+      : (starter?.disponibleHuile ?? false);
 
   // Concentration suggérée pour flacon 2
   let concentrationSuggeree: number;
@@ -61,20 +65,36 @@ export function BridgeAjoutFlacon({
       </p>
 
       <div className="space-y-3">
-        <button
-          type="button"
-          onClick={onAutoSame}
-          className="w-full text-left p-6 rounded-lg border-2 border-bone-200 hover:border-forest-500/50 bg-white transition-all"
-        >
-          <p className="font-serif text-xl mb-2">
-            Oui — ajouter {formatOpposeLabel} avec profil auto-adapté
-          </p>
-          <p className="text-sm text-smoke-600">
-            Même starter ({starter?.nom}), concentration adaptée à{' '}
-            {concentrationSuggeree}%, {formatOppose === 'huile' ? 'base MCT' : 'arôme Neutre'} par défaut
-            (modifiable au récap).
-          </p>
-        </button>
+        {oppositeAvailable ? (
+          <button
+            type="button"
+            onClick={onAutoSame}
+            className="w-full text-left p-6 rounded-lg border-2 border-bone-200 hover:border-forest-500/50 bg-white transition-all"
+          >
+            <p className="font-serif text-xl mb-2">
+              Oui — ajouter {formatOpposeLabel} avec profil auto-adapté
+            </p>
+            <p className="text-sm text-smoke-600">
+              Même starter ({starter?.nom}), concentration adaptée à{' '}
+              {concentrationSuggeree}%, {formatOppose === 'huile' ? 'base MCT' : 'arôme Neutre'} par défaut
+              (modifiable au récap).
+            </p>
+          </button>
+        ) : (
+          <div className="w-full text-left p-6 rounded-lg border-2 border-bone-200 bg-bone-100 opacity-70">
+            <p className="font-serif text-xl mb-2 text-smoke-600">
+              {formatOpposeLabel === 'vape 30ml'
+                ? 'Format vape non disponible pour ce starter'
+                : 'Format huile non disponible pour ce starter'}
+            </p>
+            <p className="text-sm text-smoke-600">
+              {starter?.nom} n&apos;est pas encore disponible en{' '}
+              {formatOpposeLabel}. Choisissez « profil différent » pour
+              composer un second flacon avec un autre besoin, ou passez à la
+              commande.
+            </p>
+          </div>
+        )}
 
         <button
           type="button"
