@@ -29,6 +29,11 @@ pnpm test           # Vitest unit
 pnpm test:e2e       # Playwright E2E
 ```
 
+## Feedback
+
+Voir `docs/FEEDBACK-GUIDE.md` pour les points à observer et comment
+communiquer votre retour.
+
 ## Contexte
 
 Voir spec parent : `/Users/guillaume/weecl-factory/weecl/offre-huiles-b2c-sur-mesure-v2.md`
